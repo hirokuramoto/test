@@ -41,7 +41,7 @@ class RouletteSelector(IndividualSelector):
         total = np.sum(evaluate_abs)
 
         # 空配列を用意
-        selected_index = np.array([], dtype = np.int)
+        selected_index = np.array([], dtype = np.int64)
         #selected_index = np.empty(self._selection_num, dtype = 'int64')
 
         for i in range(self._selection_num):

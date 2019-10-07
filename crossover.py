@@ -26,18 +26,33 @@ class Crossover(metaclass = ABCMeta):
         """
         pass
 
-class BLX_alpha(Crossover):
-    def __init__(self, generate_size, alpha = 0.3):
-        super(BLX_alpha, self).__init__(generate_size) # generate_sizeはスーパークラスの__init__()で定義したものを再利用
-        self._alpha = alpha
-
+class Simplex(Crossover):
     def crossover(self, individual_set, parents_set):
-        """2個体から子個体を生成する
+        """次元数+1個体から子個体を生成する
         """
+        # 親個体を抽出して2次元配列化
+        matrix = np.array([individual_set[i] for i in parents_set])
+        # 列ごと(axis=0)の平均値を求める
+        center = matrix.mean(axis = 0)
+        # 設計変数の数を抽出
+        dimension = len(center)
 
-        matrix = np.array([individual_set[i] for i in parents_set[:2]])
-        return matrix
+        alpha = math.sqrt(dimension + 2)
+        matrix = center + alpha * (matrix - center)
 
+        # 空配列を用意
+        children_set = np.empty((0, dimension), dtype = np.float64)
+
+        for _ in range(self._generate_size):
+            # 子1個体の遺伝子を格納する空配列を用意
+            gene = np.zeros(dimension)
+
+            for k, (vector1, vector2) in enumerate(zip(matrix, matrix[1:])):
+                r_k = random.uniform(0., 1.) ** (1./(k+1))
+                child = r_k * (vector1 - vector2 + gene)
+            gene += matrix[-1]
+            child = np.append(children_set, np.array([[child]]))
+        return children_set
 
 
 if __name__ == "__main__":
@@ -54,7 +69,7 @@ if __name__ == "__main__":
     elite_set = EliteSelector(2).select(individual_set, evaluate_set)
     roulette_set = RouletteSelector(4).select(individual_set, evaluate_set)
 
-    test = BLX_alpha(2).crossover(individual_set, roulette_set)
+    test = Simplex(3).crossover(individual_set, roulette_set)
 
 
 
