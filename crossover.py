@@ -30,28 +30,30 @@ class Simplex(Crossover):
     def crossover(self, individual_set, parents_set):
         """次元数+1個体から子個体を生成する
         """
-        # 親個体を抽出して2次元配列化
-        matrix = np.array([individual_set[i] for i in parents_set])
-        # 列ごと(axis=0)の平均値を求める
-        center = matrix.mean(axis = 0)
+        # 親個体を抽出して2次元配列化（親個体数×次元数）
+        matrix_parents = np.array([individual_set[i] for i in parents_set])
+        # 列ごと(axis=0)の平均値を求める（1×次元数）
+        center = matrix_parents.mean(axis = 0)
         # 設計変数の数を抽出
         dimension = len(center)
 
         alpha = math.sqrt(dimension + 2)
-        matrix = center + alpha * (matrix - center)
+
+        # matrix行列の最終行がp^nに相当
+        matrix = center + alpha * (matrix_parents - center)
 
         # 空配列を用意
-        children_set = np.empty((0, dimension), dtype = np.float64)
+        children_set = np.array([], dtype = np.float64)
 
         for _ in range(self._generate_size):
             # 子1個体の遺伝子を格納する空配列を用意
             gene = np.zeros(dimension)
-
             for k, (vector1, vector2) in enumerate(zip(matrix, matrix[1:])):
                 r_k = random.uniform(0., 1.) ** (1./(k+1))
-                child = r_k * (vector1 - vector2 + gene)
+                gene = r_k * (vector1 - vector2 + gene)
             gene += matrix[-1]
-            child = np.append(children_set, np.array([[child]]))
+            # 子個体数×次元数の2次元配列に整理
+            children_set = np.append(children_set, gene).reshape(self._generate_size, -1)
         return children_set
 
 
