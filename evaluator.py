@@ -12,12 +12,18 @@ class Evaluator(object):
         self._individual_set = individual_set
 
     def evaluate(self):
-        """個体集団を評価
+        """Rosenbrock関数で個体集団を評価
         Returns :
             np.array（1次元配列）：評価値配列
         """
-        # 要素の合計（評価値）を返す
-        evaluate_set = np.sum(self._individual_set, axis = 1)
+
+        # individual_setの行数（個体数）を取得
+        size = self._individual_set.shape[0]
+
+        evaluate_set = np.array([], dtype = np.float64)
+        for i in range(size):
+            result = 100.0 * (self._individual_set[i,1] - self._individual_set[i,0]**2) ** 2 + (self._individual_set[i,0] - 1)** 2
+            evaluate_set = np.append(evaluate_set, result)
         return evaluate_set
 
 
@@ -27,7 +33,7 @@ class Evaluator(object):
 
 
 if __name__ == "__main__":
-    generator = Generator(10, 0, 4, 3)
+    generator = Generator(10, 0, 2, 3)
     # 個体集団の2次元配列の取得
     individual_set = generator.generate()
 

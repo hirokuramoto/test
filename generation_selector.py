@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 import random
 import numpy as np
 from individual_selector import *
+from evaluator import *
 
 class GenerationSelector(metaclass=ABCMeta):
     """次世代に残す個体の選択方法のベース
@@ -41,7 +42,7 @@ class JGG(GenerationSelector):
 
 
 
-        
+
 if __name__ == "__main__":
     from generator import *
     from evaluator import *
@@ -64,5 +65,5 @@ if __name__ == "__main__":
     print(roulette_index)
     print(children_set)
 
-    test = JGG().select(individual_set, roulette_index, children_set)
-    print(test)
+    individual_set = JGG().select(individual_set, roulette_index, children_set)
+    print(individual_set)

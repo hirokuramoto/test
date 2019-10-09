@@ -26,9 +26,6 @@ class Generator(object):
         # （ランダム値 for range(次元数)）for range(個体数)　で個体の2次元配列（np.array()）を作る
         return np.array([[value_range * np.random.rand() + self._minimum for _ in range(self._dimension)] for _ in range(self._size)])
 
-        # リストの場合
-        #return [np.array([value_range * np.random.rand() + self._minimum for _ in range(self._dimension)]) for _ in range(self._size)]
-
 
 if __name__ == "__main__":
     generator = Generator(10, 0, 4, 2)

@@ -42,7 +42,6 @@ class RouletteSelector(IndividualSelector):
 
         # 空配列を用意
         selected_index = np.array([], dtype = np.int64)
-        #selected_index = np.empty(self._selection_num, dtype = 'int64')
 
         for i in range(self._selection_num):
             # 0~totalの範囲のfloat型の乱数を生成
