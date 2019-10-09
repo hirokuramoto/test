@@ -6,6 +6,7 @@ from crossover import *
 from individual_selector import *
 from generation_selector import *
 import numpy as np
+from matplotlib import pyplot as plt
 
 def test():
     # 遺伝子の値の最大値
@@ -21,17 +22,19 @@ def test():
     size = 100
 
     # 繰り返し数
-    generation_loop = 1000
+    generation_loop = 200
 
     # 初期個体の生成
     generator = Generator(maximum, minimum, dimension, size)
     individual_set = generator.generate()
-    print(individual_set)
 
     # 初期個体の評価
     evaluator = Evaluator(individual_set)
     evaluate_set = evaluator.evaluate()
-    print(evaluate_set)
+
+    # グラフ化用の配列
+    count = np.array([], dtype = np.int)
+    value = np.array([], dtype = np.float)
 
     # メイン処理
     for i in range(generation_loop):
@@ -50,6 +53,18 @@ def test():
         evaluate_set = evaluator.evaluate()
         best_value = np.sort(evaluate_set)
         print(i, best_value[0], individual_set[0])
+
+        # 評価値の履歴
+        count = np.append(count, i)
+        value = np.append(value, best_value[0])
+
+    # 評価値の履歴をグラフ化
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    # グリッド
+    ax.grid(zorder=0)
+    ax.scatter(count, value, s=10, c='blue', edgecolors='blue', linewidths='1', marker='o', alpha = '0.5')
+    plt.show()
 
 if __name__ == "__main__":
     test()
