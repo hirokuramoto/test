@@ -22,7 +22,11 @@ def test():
     size = 100
 
     # 繰り返し数
-    generation_loop = 200
+    generation_loop = 300
+
+    # グラフ化用の配列
+    count = np.array([], dtype = np.int)
+    value = np.array([], dtype = np.float)
 
     # 初期個体の生成
     generator = Generator(maximum, minimum, dimension, size)
@@ -31,10 +35,6 @@ def test():
     # 初期個体の評価
     evaluator = Evaluator(individual_set)
     evaluate_set = evaluator.evaluate()
-
-    # グラフ化用の配列
-    count = np.array([], dtype = np.int)
-    value = np.array([], dtype = np.float)
 
     # メイン処理
     for i in range(generation_loop):
@@ -61,8 +61,15 @@ def test():
     # 評価値の履歴をグラフ化
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
+
     # グリッド
     ax.grid(zorder=0)
+
+    # ラベルの指定
+    ax.set_xlabel(r'count')
+    ax.set_ylabel(r'value')
+    ax.set_xlim(0.0, generation_loop)
+
     ax.scatter(count, value, s=10, c='blue', edgecolors='blue', linewidths='1', marker='o', alpha = '0.5')
     plt.show()
 
