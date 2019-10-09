@@ -26,12 +26,9 @@ class JGG(GenerationSelector):
     """Just Generation Gap による世代交代
     """
 
-    def select(self, individual_set, parents_index, children_set):
+    def select(self, individual_set, parents_index, children_set, children_value):
         """子個体からエリート個体を選択し，親個体と入れ替える
         """
-        # 子個体の評価値を取得
-        children_value = Evaluator(children_set).evaluate()
-
         # 子個体からエリート個体のindexを取得
         elite_index = EliteSelector(parents_index.size).select(children_set, children_value)
 

@@ -22,7 +22,11 @@ def test():
     size = 100
 
     # 繰り返し数
-    generation_loop = 300
+    generation_loop = 1000
+
+    # 評価関数
+    evaluator = Rosenbrock()
+
 
     # グラフ化用の配列
     count = np.array([], dtype = np.int)
@@ -33,8 +37,7 @@ def test():
     individual_set = generator.generate()
 
     # 初期個体の評価
-    evaluator = Evaluator(individual_set)
-    evaluate_set = evaluator.evaluate()
+    evaluate_set = evaluator.evaluate(individual_set)
 
     # メイン処理
     for i in range(generation_loop):
@@ -44,13 +47,13 @@ def test():
 
         # 交叉
         children_set = Simplex(dimension * 10).crossover(individual_set, parents_index)
+        children_value = evaluator.evaluate(children_set)
 
         # 選択
-        individual_set = JGG().select(individual_set, parents_index, children_set)
+        individual_set = JGG().select(individual_set, parents_index, children_set, children_value)
 
         # 最良個体
-        evaluator = Evaluator(individual_set)
-        evaluate_set = evaluator.evaluate()
+        evaluate_set = evaluator.evaluate(individual_set)
         best_value = np.sort(evaluate_set)
         print(i, best_value[0], individual_set[0])
 
