@@ -28,6 +28,6 @@ class Generator(object):
 
 
 if __name__ == "__main__":
-    generator = Generator(10, 0, 4, 2)
+    generator = Generator(10, 0, 2, 3)
     individual_set = generator.generate()
     print(individual_set)

@@ -19,13 +19,17 @@ def test():
     dimension = 2
 
     #　個体数
-    size = 100
+    size = 300
 
     # 繰り返し数
-    generation_loop = 1000
+    generation_loop = 100
+
+
+    # テストデータを取得
+    data = StandardData(5, 2).standard("result.csv")
 
     # 評価関数
-    evaluator = Rosenbrock()
+    evaluator = CrossValidation()
 
 
     # グラフ化用の配列
@@ -37,7 +41,7 @@ def test():
     individual_set = generator.generate()
 
     # 初期個体の評価
-    evaluate_set = evaluator.evaluate(individual_set)
+    evaluate_set = evaluator.evaluate(individual_set, data)
 
     # メイン処理
     for i in range(generation_loop):
@@ -47,13 +51,13 @@ def test():
 
         # 交叉
         children_set = Simplex(dimension * 10).crossover(individual_set, parents_index)
-        children_value = evaluator.evaluate(children_set)
+        children_value = evaluator.evaluate(children_set, data)
 
         # 選択
         individual_set = JGG().select(individual_set, parents_index, children_set, children_value)
 
         # 最良個体
-        evaluate_set = evaluator.evaluate(individual_set)
+        evaluate_set = evaluator.evaluate(individual_set, data)
         best_value = np.sort(evaluate_set)
         print(i, best_value[0], individual_set[0])
 
