@@ -8,22 +8,22 @@ from leave_one_out import LeaveOneOut
 
 
 class Evaluator(metaclass=ABCMeta):
-    def evaluate(self, individual_set, data):
+    def evaluate(self, individual_set):
         """constractor
         Args :
             individual_set (np.array) : 個体の2次元配列
         Returns :
             np.array（1次元配列）：評価値配列
         """
-        return self._evaluate_function(individual_set, data)
+        return self._evaluate_function(individual_set)
 
     @abstractmethod
-    def _evaluate_function(self, individual_set, data):
+    def _evaluate_function(self, individual_set):
         pass
 
 
 class Rosenbrock(Evaluator):
-    def _evaluate_function(self, individual_set, data):
+    def _evaluate_function(self, individual_set):
 
         # individual_setの行数（個体数）を取得
         size = individual_set.shape[0]
@@ -36,7 +36,11 @@ class Rosenbrock(Evaluator):
 
 
 class CrossValidation(Evaluator):
-    def _evaluate_function(self, individual_set, data):
+    def __init__(self, data):
+        # CrossValidation を使うときは引数が１つ増えるので注意
+        self._data = data
+
+    def _evaluate_function(self, individual_set):
         """constractor
         Args :
             individual_set (np.array) : 個体の2次元配列
@@ -55,14 +59,14 @@ class CrossValidation(Evaluator):
 
 
         #テストデータのN数を取得
-        data_size = data.shape[0]
+        data_size = self._data.shape[0]
 
         # individual_setの行数（個体数）を取得
         size = individual_set.shape[0]
 
         # テストデータの設計変数と目的関数を取得
-        design = np.array(data[0:, 0:design_variables])
-        object = np.array(data[0:, design_variables:-1])
+        design = np.array(self._data[0:, 0:design_variables])
+        object = np.array(self._data[0:, design_variables:-1])
 
         evaluate_set = np.array([], dtype = np.float64)
         for i in range(size):
@@ -86,9 +90,9 @@ if __name__ == "__main__":
     # テストデータを取得
     data = StandardData(5, 2).standard("result.csv")
 
-    evaluator = CrossValidation()
+    evaluator = CrossValidation(data)
     # 個体集団の評価値配列（1次元）の取得
-    test = evaluator.evaluate(individual_set, data)
+    test = evaluator.evaluate(individual_set)
 
     print(individual_set)
     print(test)
