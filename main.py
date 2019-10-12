@@ -25,7 +25,7 @@ def main():
     size = 40
 
     # 繰り返し数
-    generation_loop = 1
+    generation_loop = 100
 
 
     # テストデータを取得
