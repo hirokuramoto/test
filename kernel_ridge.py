@@ -33,8 +33,9 @@ class KernelRidge(object):
         # グラム行列の計算
         gram_matrix = np.identity(data_size)
         for i in range(data_size):
-            for k in range(data_size):
+            for k in range(i+1, data_size):
                 gram_matrix[i][k] = np.exp(-1 * self._beta * np.inner(design_data[i,] - design_data[k,], design_data[i,] - design_data[k,]))
+                gram_matrix[k][i] = gram_matrix[i][k]
 
         # 重みベクトルの計算
         i_mat = np.identity(data_size)
@@ -43,7 +44,7 @@ class KernelRidge(object):
         # 予測値の計算
         predict_vector = np.dot(gram_matrix, alpha_vector)
 
-        return predict_vector
+        return gram_matrix#predict_vector
 
 if __name__ == '__main__':
     from standard_data import StandardData
