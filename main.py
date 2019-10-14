@@ -25,7 +25,7 @@ def main():
     size = 40
 
     # 繰り返し数
-    generation_loop = 100
+    generation_loop = 1
 
 
     # テストデータを取得
@@ -41,6 +41,7 @@ def main():
     value = np.array([], dtype = np.float)
 
     # 初期個体の生成
+
     generator = Generator(maximum, minimum, dimension, size)
     individual_set = generator.generate()
 
