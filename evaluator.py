@@ -36,9 +36,12 @@ class Rosenbrock(Evaluator):
 
 
 class CrossValidation(Evaluator):
-    def __init__(self, data):
+    def __init__(self, data, design_variables, objective_variables, num):
         # CrossValidation を使うときは引数が１つ増えるので注意
-        self._data = data
+        self._data = data       # テストデータ
+        self._design_variables = design_variables
+        self._objective_variables = objective_variables
+        self._num = num
 
     def _evaluate_function(self, individual_set):
         """constractor
@@ -49,13 +52,13 @@ class CrossValidation(Evaluator):
             np.array（1次元配列）：評価値配列
         """
         # 設計変数の個数指定
-        design_variables = 5
+        design_variables = self._design_variables
 
         # 目的関数の個数指定
-        objective_variables = 2
+        objective_variables = self._objective_variables
 
         # 何番目の目的関数について調べるか
-        num = 0
+        num = self._num
 
 
         #テストデータのN数を取得
@@ -90,7 +93,7 @@ if __name__ == "__main__":
     # テストデータを取得
     data = StandardData(5, 2).standard("result.csv")
 
-    evaluator = CrossValidation(data)
+    evaluator = CrossValidation(data, 5, 2, 0)
     # 個体集団の評価値配列（1次元）の取得
     test = evaluator.evaluate(individual_set)
 

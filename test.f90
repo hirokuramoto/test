@@ -1,8 +1,9 @@
-subroutine test(n, A, b, gram_matrix)
+subroutine test(n, n_param, b, A, gram_matrix)
   implicit none
   integer i, j
   integer(4), intent(in) :: n
-  real(8),    intent(in) :: A(0 : n - 1, 0 : 4)
+  integer(4), intent(in) :: n_param
+  real(8),    intent(in) :: A(0 : n - 1, 0 : n_param - 1)
   real(8),    intent(in) :: b
   real(8),    intent(inout):: gram_matrix(0 : n - 1, 0 : n - 1)
 

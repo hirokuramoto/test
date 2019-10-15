@@ -34,6 +34,9 @@ class LeaveOneOut(object):
         # 訓練データの結果配列を取得
         object_data = self._object_data
 
+        beta = self._beta
+        n_param = design_data.shape[1]
+
 
         # グラム行列の計算
         #gram_matrix = np.identity(data_size)
@@ -46,7 +49,7 @@ class LeaveOneOut(object):
         # 渡す行列データを転置（Fortranは列majorのため）
         design_data = design_data.T
         gram_matrix = np.identity(data_size)
-        call = CallFortran(data_size, design_data, self._beta, gram_matrix)
+        call = CallFortran(data_size, n_param, beta, design_data, gram_matrix)
         call.call_fortran()
 
         # 重みベクトルの計算

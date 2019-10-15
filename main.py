@@ -12,36 +12,31 @@ from matplotlib import pyplot as plt
 t1 = time.time()
 
 def main():
-    # 遺伝子の値の最大値
-    maximum = 1
+    # GAパラメータ
+    maximum = 1             # 遺伝子の値の最大値
+    minimum = 0             # 遺伝子の値の最小値
+    dimension = 2           # パラメータ数
+    size = 40               # 個体数
+    generation_loop = 500   # 繰り返し数
 
-    # 遺伝子の値の最小値
-    minimum = 0
+    # 訓練用データ
+    design = 5              # 設計変数の数
+    object = 2              # 目的関数の数
+    num = 0                 # 何番目の目的関数について調べるか
+    filename = "result.csv" # 訓練データのcsvファイル
 
-    # パラメータ数
-    dimension = 2
-
-    #　個体数
-    size = 40
-
-    # 繰り返し数
-    generation_loop = 500
-
-
-    # テストデータを取得
-    data = StandardData(5, 2).standard("result.csv")
+    # 訓練用データの取り込み
+    data = StandardData(design, object).standard(filename)
 
     # 評価関数
-    evaluator = CrossValidation(data)
+    evaluator = CrossValidation(data, design, object, num)
     #evaluator = Rosenbrock()
-
 
     # グラフ化用の配列
     count = np.array([], dtype = np.int)
     value = np.array([], dtype = np.float)
 
     # 初期個体の生成
-
     generator = Generator(maximum, minimum, dimension, size)
     individual_set = generator.generate()
 

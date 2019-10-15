@@ -4,11 +4,12 @@ import numpy as np
 class CallFortran(object):
     """Fortranのサブルーチンを呼び出す
     """
-    def __init__(self, data_size, matrix, beta, gram_matrix):
-        self._data_size = data_size
-        self._matrix = matrix
-        self._beta = beta
-        self._gram_matrix = gram_matrix
+    def __init__(self, data_size, n_param, beta, matrix, gram_matrix):
+        self._data_size = data_size     # テストデータ数
+        self._n_param = n_param         # パラメータ数
+        self._beta = beta               # β
+        self._matrix = matrix           # テストデータの設計変数配列
+        self._gram_matrix = gram_matrix # グラム行列
 
     def call_fortran(self):
         #f = np.ctypeslib.load_library("libfort.so", ".")
@@ -17,8 +18,9 @@ class CallFortran(object):
         # f.{関数名}_.argtypes で、引数の型指定
         f.test_.argtypes = [
             ctypes.POINTER(ctypes.c_int32),
-            np.ctypeslib.ndpointer(dtype = np.float64),
+            ctypes.POINTER(ctypes.c_int32),
             ctypes.POINTER(ctypes.c_double),
+            np.ctypeslib.ndpointer(dtype = np.float64),
             np.ctypeslib.ndpointer(dtype = np.float64)
             ]
 
@@ -27,8 +29,9 @@ class CallFortran(object):
 
         # 定数をポインタとして渡す
         fn = ctypes.byref(ctypes.c_int32(self._data_size))
+        fp = ctypes.byref(ctypes.c_int32(self._n_param))
         fb = ctypes.byref(ctypes.c_double(self._beta))
-        f.test_(fn, self._matrix, fb, self._gram_matrix)
+        f.test_(fn, fp, fb, self._matrix, self._gram_matrix)
 
 if __name__ == '__main__':
     # python側から与えられた２次元配列は転置されてしまうので注意が必要
@@ -41,12 +44,13 @@ if __name__ == '__main__':
 
     design = np.array(data[0:, 0:5])
     data_size = design.shape[0]
+    n_param = design.shape[1]
     design = design.T
 
     beta = 0.1
     gram_matrix = np.identity(data_size)
 
 
-    test = CallFortran(data_size, design, beta, gram_matrix)
+    test = CallFortran(data_size, n_param, beta, design, gram_matrix)
     hoge = test.call_fortran()
     print(gram_matrix)
