@@ -16,7 +16,7 @@ def main():
     maximum = 1             # 遺伝子の値の最大値
     minimum = 0             # 遺伝子の値の最小値
     dimension = 2           # パラメータ数
-    size = 40               # 個体数
+    size = 100               # 個体数
     generation_loop = 500   # 繰り返し数
 
     # 訓練用データ
