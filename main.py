@@ -13,11 +13,11 @@ t1 = time.time()
 
 def main():
     # GAパラメータ
-    maximum = 1             # 遺伝子の値の最大値
+    maximum = 0.2             # 遺伝子の値の最大値
     minimum = 0             # 遺伝子の値の最小値
     dimension = 2           # パラメータ数
     size = 100               # 個体数
-    generation_loop = 500   # 繰り返し数
+    generation_loop = 1000   # 繰り返し数
 
     # 訓練用データ
     design = 5              # 設計変数の数
@@ -48,6 +48,7 @@ def main():
 
         # 親個体の選択後，index配列取得
         parents_index = RouletteSelector(dimension).select(individual_set, evaluate_set)
+        #parents_index = RouletteSelector(dimension + 1).select(individual_set, evaluate_set)
 
         # 交叉
         children_set = BLXalpha(dimension * 10).crossover(individual_set, parents_index)

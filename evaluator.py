@@ -69,7 +69,7 @@ class CrossValidation(Evaluator):
 
         # テストデータの設計変数と目的関数を取得
         design = np.array(self._data[0:, 0:design_variables])
-        object = np.array(self._data[0:, design_variables:-1])
+        object = np.array(self._data[0:, design_variables-1:-1])
 
         evaluate_set = np.array([], dtype = np.float64)
         for i in range(size):
@@ -93,9 +93,13 @@ if __name__ == "__main__":
     # テストデータを取得
     data = StandardData(5, 2).standard("result.csv")
 
+    design_variables = 5
+    design = np.array(data[0:, 0:design_variables])
+    object = np.array(data[0:, design_variables-1:-1])
     evaluator = CrossValidation(data, 5, 2, 0)
     # 個体集団の評価値配列（1次元）の取得
     test = evaluator.evaluate(individual_set)
 
     print(individual_set)
     print(test)
+    print(object)
