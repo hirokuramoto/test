@@ -1,5 +1,4 @@
 # メインファイル
-
 from generator import *
 from evaluator import *
 from crossover import *
@@ -13,9 +12,9 @@ t1 = time.time()
 
 def main():
     # GAパラメータ
-    maximum = 0.2             # 遺伝子の値の最大値
-    minimum = 0             # 遺伝子の値の最小値
-    dimension = 2           # パラメータ数
+    maximum = 0.2            # 遺伝子の値の最大値
+    minimum = 0              # 遺伝子の値の最小値
+    dimension = 2            # パラメータ数
     size = 100               # 個体数
     generation_loop = 1000   # 繰り返し数
 
@@ -28,7 +27,7 @@ def main():
     # 訓練用データの取り込み
     data = StandardData(design, object).standard(filename)
 
-    # 評価関数
+    # 評価関数44
     evaluator = CrossValidation(data, design, object, num)
     #evaluator = Rosenbrock()
 
