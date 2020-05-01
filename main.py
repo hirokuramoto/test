@@ -27,7 +27,7 @@ def main():
     # 訓練用データの取り込み
     data = StandardData(design, object).standard(filename)
 
-    # 評価関数44
+    # 評価関数
     evaluator = CrossValidation(data, design, object, num)
     #evaluator = Rosenbrock()
 
