@@ -19,6 +19,17 @@ class IndividualSelector(metaclass = ABCMeta):
         """
         pass
 
+class RandomSelector(IndividualSelector):
+    """ランダム選択による個体選択
+    """
+    def select(self, individual_set, evaluate_set):
+        #個体集団の個数を取得
+        n = individual_set.shape[0]
+        array = np.arange(n, dtype='int64')
+
+        random_index = np.random.choice(array, size=self._selection_num, replace=False)
+        return random_index
+
 class EliteSelector(IndividualSelector):
     """エリート選択による個体選択
     """
@@ -59,24 +70,21 @@ class RouletteSelector(IndividualSelector):
                     break
         return selected_index
 
-
-
-
-
 if __name__ == "__main__":
     from generator import *
-    from evaluator import *
+    from userFunction.evaluator import *
 
     generator = Generator(10, 0, 3, 4)
     individual_set = generator.generate()
-
-    evaluator = Evaluator(individual_set)
-    evaluate_set = evaluator.evaluate()
+    function = Rosenbrock()
+    evaluate_set = function.evaluate(individual_set)
 
     elite_set = EliteSelector(2).select(individual_set, evaluate_set)
     roulette_set = RouletteSelector(3).select(individual_set, evaluate_set)
+    random_set = RandomSelector(3).select(individual_set, evaluate_set)
 
     print(individual_set)
     print(evaluate_set)
     print(elite_set)
     print(roulette_set)
+    print(random_set)

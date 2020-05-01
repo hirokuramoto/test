@@ -44,7 +44,6 @@ class Simplex(Crossover):
         children_set = np.array([], dtype = np.float64)
 
         for _ in range(self._generate_size):
-
             # 子1個体の遺伝子を格納する空配列を用意
             gene = np.zeros(dimension)
             for k, (vector1, vector2) in enumerate(zip(matrix, matrix[1:])):
@@ -55,9 +54,9 @@ class Simplex(Crossover):
 
         # 子個体数×次元数の2次元配列に整理
         children_set = children_set.reshape(self._generate_size, -1)
-
         children_set = np.clip(children_set, 0, None)
         return children_set
+
 
 class BLXalpha(Crossover):
     def __init__(self, generate_size, alpha = 0.5):
@@ -71,7 +70,6 @@ class BLXalpha(Crossover):
         matrix_parents = np.array([individual_set[i] for i in parents_index])
 
         # 列ごと(axis=0)の最大・最小を求める（1×次元数）
-
         gene_max = matrix_parents.max(axis=0)
         gene_min = matrix_parents.min(axis=0)
         gene_abs = np.abs(gene_max - gene_min)
@@ -82,15 +80,25 @@ class BLXalpha(Crossover):
 
         # 空配列を用意
         children_set = np.array([], dtype = np.float64)
-
         for _ in range(self._generate_size):
             gene = [random.uniform(g_min, g_max) for g_max, g_min in zip(gene_max, gene_min)]
-
             children_set = np.append(children_set, gene)
 
         # 子個体数×次元数の2次元配列に整理
         children_set = children_set.reshape(self._generate_size, -1)
         return children_set
+
+
+    class REX(Crossover):
+        def __init__(self, generate_size, k = 1.0):
+            super(REX, self).__init__(generate_size)
+            self._k = k
+
+        def crossover(self, individual_set, parents_index):
+            """次元数+k個体から子個体を生成する
+            """
+
+        
 
 if __name__ == "__main__":
     from generator import *

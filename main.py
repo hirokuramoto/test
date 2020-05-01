@@ -1,11 +1,11 @@
 # メインファイル
 from generator import *
-from evaluator import *
 from crossover import *
 from individual_selector import *
 from generation_selector import *
 import numpy as np
 import time
+from userFunction.evaluator import *
 from matplotlib import pyplot as plt
 
 t1 = time.time()
@@ -18,18 +18,9 @@ def main():
     size = 100               # 個体数
     generation_loop = 1000   # 繰り返し数
 
-    # 訓練用データ
-    #design = 5              # 設計変数の数
-    #object = 2              # 目的関数の数
-    #num = 0                 # 何番目の目的関数について調べるか
-    #filename = "result.csv" # 訓練データのcsvファイル
-
-    # 訓練用データの取り込み
-    #data = StandardData(design, object).standard(filename)
-
     # 評価関数
-    #evaluator = CrossValidation(data, design, object, num)
-    evaluator = Rosenbrock()
+    #function = CrossValidation()
+    function = Rosenbrock()
 
     # グラフ化用の配列
     count = np.array([], dtype = np.int)
@@ -40,25 +31,26 @@ def main():
     individual_set = generator.generate()
 
     # 初期個体の評価
-    evaluate_set = evaluator.evaluate(individual_set)
+    evaluate_set = function.evaluate(individual_set)
 
     # メイン処理
     for i in range(generation_loop):
 
         # 親個体の選択後，index配列取得
-        parents_index = RouletteSelector(dimension).select(individual_set, evaluate_set)
+        parents_index = RandomSelector(dimension + 1).select(individual_set, evaluate_set)
+        #parents_index = RouletteSelector(dimension).select(individual_set, evaluate_set)
         #parents_index = RouletteSelector(dimension + 1).select(individual_set, evaluate_set)
 
         # 交叉
         children_set = BLXalpha(dimension * 10).crossover(individual_set, parents_index)
         #children_set = Simplex(dimension * 10).crossover(individual_set, parents_index)
-        children_value = evaluator.evaluate(children_set)
+        children_value = function.evaluate(children_set)
 
         # 選択
         individual_set = JGG().select(individual_set, parents_index, children_set, children_value)
 
         # 最良個体
-        evaluate_set = evaluator.evaluate(individual_set)
+        evaluate_set = function.evaluate(individual_set)
         best_value = np.sort(evaluate_set)
         print(i, best_value[0], individual_set[0])
 

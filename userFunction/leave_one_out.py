@@ -1,7 +1,7 @@
 # ガウスパラメータ，正則化パラメータの決定のためにCV値を求める
 
 import numpy as np
-from call_fortran import *
+from .call_fortran import *
 
 class LeaveOneOut(object):
     def __init__(self, beta, penalty, design_data, object_data):

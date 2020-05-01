@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 import random
 import numpy as np
 from individual_selector import *
-from evaluator import *
+from userFunction import evaluator
 
 class GenerationSelector(metaclass=ABCMeta):
     """次世代に残す個体の選択方法のベース

@@ -12,7 +12,7 @@ class CallFortran(object):
         self._gram_matrix = gram_matrix # グラム行列
 
     def call_fortran(self):
-        f = np.ctypeslib.load_library("libfort.dll", ".")   # Linux, MacOSの場合
+        f = np.ctypeslib.load_library("libfort.so", "./userFunction")   # Linux, MacOSの場合
         #f = np.ctypeslib.load_library("libfort.dll", ".")   # Windowsの場合
 
         # f.{関数名}_.argtypes で、引数の型指定
