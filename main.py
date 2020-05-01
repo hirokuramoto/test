@@ -19,17 +19,17 @@ def main():
     generation_loop = 1000   # 繰り返し数
 
     # 訓練用データ
-    design = 5              # 設計変数の数
-    object = 2              # 目的関数の数
-    num = 0                 # 何番目の目的関数について調べるか
-    filename = "result.csv" # 訓練データのcsvファイル
+    #design = 5              # 設計変数の数
+    #object = 2              # 目的関数の数
+    #num = 0                 # 何番目の目的関数について調べるか
+    #filename = "result.csv" # 訓練データのcsvファイル
 
     # 訓練用データの取り込み
-    data = StandardData(design, object).standard(filename)
+    #data = StandardData(design, object).standard(filename)
 
     # 評価関数
-    evaluator = CrossValidation(data, design, object, num)
-    #evaluator = Rosenbrock()
+    #evaluator = CrossValidation(data, design, object, num)
+    evaluator = Rosenbrock()
 
     # グラフ化用の配列
     count = np.array([], dtype = np.int)
