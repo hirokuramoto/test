@@ -72,12 +72,6 @@ class CrossValidation(Evaluator):
 
         return evaluate_set
 
-
-
-
-
-
-
 if __name__ == "__main__":
     generator = Generator(10, 0, 2, 100)
     # 個体集団の2次元配列の取得

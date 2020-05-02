@@ -30,11 +30,11 @@ class Simplex(Crossover):
     def crossover(self, individual_set, parents_index):
         """次元数+1個体から子個体を生成する
         """
-        # 親個体を抽出して2次元配列化（親個体数×次元数）
+        # 親個体の2次元配列化（親個体数×次元数）
         matrix_parents = np.array([individual_set[i] for i in parents_index])
         # 列ごと(axis=0)の平均値を求める（1×次元数）
         center = matrix_parents.mean(axis = 0)
-        # 設計変数の数を抽出
+        # 次元数を取得
         dimension = len(center)
 
         alpha = math.sqrt(dimension + 2)
@@ -66,7 +66,7 @@ class BLXalpha(Crossover):
     def crossover(self, individual_set, parents_index):
         """2個体から子個体を生成する
         """
-        # 親個体を抽出して2次元配列化（親個体数×次元数）
+        # 親個体の2次元配列化（親個体数×次元数）
         matrix_parents = np.array([individual_set[i] for i in parents_index])
 
         # 列ごと(axis=0)の最大・最小を求める（1×次元数）
@@ -89,37 +89,57 @@ class BLXalpha(Crossover):
         return children_set
 
 
-    class REX(Crossover):
-        def __init__(self, generate_size, k = 1.0):
-            super(REX, self).__init__(generate_size)
-            self._k = k
+class REX(Crossover):
+    def crossover(self, individual_set, parents_index):
+        """次元数+1個体から子個体を生成する
+        """
+        # 親個体の2次元配列化（親個体数×次元数）
+        parents = np.array([individual_set[i] for i in parents_index])
 
-        def crossover(self, individual_set, parents_index):
-            """次元数+k個体から子個体を生成する
-            """
+        # 親集合の重心を求める.列ごと(axis=0)の平均値を求める（1×次元数)
+        center = parents.mean(axis = 0)
 
-        
+        # 次元数を取得
+        dimension = len(center)
+
+        # 親個体数を取得
+        n = parents.shape[0]
+
+        # 一様分布のときの区間[-a, a]を求める
+        a = np.sqrt(3/n)
+
+        # 空配列を用意
+        children = np.zeros(dimension)
+        children_set = np.array([], dtype = np.float64)
+
+        # 子個体を生成
+        for j in range(self._generate_size):
+            x = 0.
+            for i in range(n):
+                x += np.random.uniform(-a, a) * (parents[i, ] - center)
+            children = center + x
+            children_set = np.append(children_set, children)
+        # 2次元配列に整理
+        children_set = children_set.reshape(self._generate_size, -1)
+        return children_set
 
 if __name__ == "__main__":
     from generator import *
-    from evaluator import *
+    from userFunction.evaluator import *
     from individual_selector import *
 
-    generator = Generator(10, 0, 3, 5)
+    generator = Generator(10, 0, 2, 100)
     individual_set = generator.generate()
 
     evaluator = Rosenbrock()
     evaluate_set = evaluator.evaluate(individual_set)
 
-    elite_set = EliteSelector(2).select(individual_set, evaluate_set)
-    roulette_set = RouletteSelector(2).select(individual_set, evaluate_set)
-
-    test = BLXalpha(3).crossover(individual_set, roulette_set)
-
-
-
-    print(individual_set)
+    random_index = RandomSelector(2+1).select(individual_set, evaluate_set)
+    parents = np.array([individual_set[i] for i in random_index])
+    test = REX(1000).crossover(individual_set, random_index)
+    #print(individual_set)
     print(evaluate_set)
-    print(elite_set)
-    print(roulette_set)
-    print(test)
+    print(random_index)
+    np.savetxt('./individual_set.csv', individual_set, delimiter=',')
+    np.savetxt('./children_set.csv', test, delimiter=',')
+    np.savetxt('./parents.csv', parents, delimiter=',')

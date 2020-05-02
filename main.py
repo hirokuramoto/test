@@ -37,13 +37,12 @@ def main():
     for i in range(generation_loop):
 
         # 親個体の選択後，index配列取得
-        parents_index = RandomSelector(dimension + 1).select(individual_set, evaluate_set)
-        #parents_index = RouletteSelector(dimension).select(individual_set, evaluate_set)
-        #parents_index = RouletteSelector(dimension + 1).select(individual_set, evaluate_set)
+        parents_index = RandomSelector(dimension + 1).select(individual_set, evaluate_set) # JGGの場合 n+k
 
         # 交叉
-        children_set = BLXalpha(dimension * 10).crossover(individual_set, parents_index)
+        #children_set = BLXalpha(dimension * 10).crossover(individual_set, parents_index)
         #children_set = Simplex(dimension * 10).crossover(individual_set, parents_index)
+        children_set = REX(dimension * 10).crossover(individual_set, parents_index)
         children_value = function.evaluate(children_set)
 
         # 選択
