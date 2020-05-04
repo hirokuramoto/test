@@ -11,20 +11,21 @@ from matplotlib import pyplot as plt
 t1 = time.time()
 
 def main():
+    '''GAのメイン処理'''
     # GAパラメータ
-    maximum = 0.2            # 遺伝子の値の最大値
-    minimum = 0              # 遺伝子の値の最小値
-    dimension = 2            # パラメータ数
-    size = 100               # 個体数
-    generation_loop = 1000   # 繰り返し数
-
-    # 評価関数
-    #function = CrossValidation()
-    function = Rosenbrock()
+    maximum   = 0.2       # 遺伝子の値の最大値
+    minimum   = 0.0       # 遺伝子の値の最小値
+    dimension = 2         # パラメータ数
+    size      = 100       # 個体数
+    generatio_loop = 1000 # 繰り返し数
 
     # グラフ化用の配列
     count = np.array([], dtype = np.int)
     value = np.array([], dtype = np.float)
+
+    # 評価関数の設定
+    #function = CrossValidation()
+    function = Rosenbrock()
 
     # 初期個体の生成
     generator = Generator(maximum, minimum, dimension, size)
@@ -43,6 +44,8 @@ def main():
         #children_set = BLXalpha(dimension * 10).crossover(individual_set, parents_index)
         #children_set = Simplex(dimension * 10).crossover(individual_set, parents_index)
         children_set = REX(dimension * 10).crossover(individual_set, parents_index)
+
+        # 子個体の評価
         children_value = function.evaluate(children_set)
 
         # 選択
@@ -73,7 +76,7 @@ def main():
     ax.set_xlabel(r'count')
     ax.set_ylabel(r'value')
     ax.set_xlim(0.0, generation_loop)
-
+    
     ax.scatter(count, value, s=10, c='blue', edgecolors='blue', linewidths='1', marker='o', alpha = '0.5')
     plt.show()
 

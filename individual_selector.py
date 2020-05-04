@@ -1,38 +1,36 @@
 # エリート選択とルーレット選択の定義（親個体のindex配列取得）
-
 from abc import ABCMeta, abstractmethod
 import numpy as np
 import random
 
 class IndividualSelector(metaclass = ABCMeta):
-    """個体の選択方法のベース
-    """
+    '''個体の選択方法のベース'''
     def __init__(self, selection_num):
         self._selection_num = selection_num
 
     @abstractmethod
     def select(self, individual_set, evaluate_set):
-        """選択した個体の配列を返す
+        '''選択した個体の配列を返す
         Args :
             individual_set (np.array) : 個体集団の2次元配列
-            evaluate_set(np.array) : 個体集団の評価値 1次元配列
-        """
+            evaluate_set (np.array)   : 個体集団の評価値 1次元配列
+        Returns :
+            selected_index (np.array) : 親集団から選択する個体のindex
+        '''
         pass
 
 class RandomSelector(IndividualSelector):
-    """ランダム選択による個体選択
-    """
+    '''ランダム選択による個体選択'''
     def select(self, individual_set, evaluate_set):
         #個体集団の個数を取得
         n = individual_set.shape[0]
         array = np.arange(n, dtype='int64')
 
-        random_index = np.random.choice(array, size=self._selection_num, replace=False)
-        return random_index
+        selected_index = np.random.choice(array, size=self._selection_num, replace=False)
+        return selected_index
 
 class EliteSelector(IndividualSelector):
-    """エリート選択による個体選択
-    """
+    '''エリート選択による個体選択'''
     def select(self, individual_set, evaluate_set):
         # 昇順ソート後のインデックスを取得
         sort_index = np.argsort(evaluate_set)
