@@ -40,8 +40,7 @@ class EliteSelector(IndividualSelector):
         return selected_index
 
 class RouletteSelector(IndividualSelector):
-    """ルーレット選択による個体選択
-    """
+    """ルーレット選択による個体選択"""
     def select(self, individual_set, evaluate_set):
         # 評価値が小さいものを選びたい．各評価値から最大評価値を引いて絶対値に直す
         evaluate_abs = np.abs(evaluate_set - np.max(evaluate_set))
