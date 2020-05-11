@@ -3,6 +3,7 @@
 from abc import ABCMeta, abstractmethod
 import random
 import numpy as np
+
 from individual_selector import *
 from userFunction import evaluator
 

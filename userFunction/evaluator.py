@@ -2,6 +2,7 @@
 
 import numpy as np
 from abc import ABCMeta, abstractmethod
+
 from generator import Generator
 from .standard_data import StandardData
 from .leave_one_out import LeaveOneOut
