@@ -69,11 +69,11 @@ class RouletteSelector(IndividualSelector):
 
 if __name__ == "__main__":
     from generator import *
-    from userFunction.evaluator import *
+    from userFunction import evaluator
 
     generator = Generator(10, 0, 3, 4)
     individual_set = generator.generate()
-    function = Rosenbrock()
+    function = evaluator.Rosenbrock()
     evaluate_set = function.evaluate(individual_set)
 
     elite_set = EliteSelector(2).select(individual_set, evaluate_set)
