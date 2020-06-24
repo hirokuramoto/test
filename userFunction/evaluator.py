@@ -1,11 +1,12 @@
 # 評価関数による評価
-
+import subprocess
 import numpy as np
+import pandas as pd
 from abc import ABCMeta, abstractmethod
 
 from generator import Generator
-from .standard_data import StandardData
-from .leave_one_out import LeaveOneOut
+#from .standard_data import StandardData
+#from .leave_one_out import LeaveOneOut
 
 
 class Evaluator(metaclass=ABCMeta):
@@ -21,6 +22,53 @@ class Evaluator(metaclass=ABCMeta):
     @abstractmethod
     def _evaluate_function(self, individual_set):
         pass
+
+class Benchmark(Evaluator):
+    def _evaluate_function(self, individual_set):
+        """constractor
+        Args :
+            individual_set (np.array) : 個体の2次元配列
+        Returns :
+            np.array（1次元配列）：評価値配列
+        """
+        # individual_setの行数（個体数）を取得
+        size = individual_set.shape[0]
+        # 設計変数ファイルを作成
+        np.savetxt('./userFunction/pop_vars_eval.txt', individual_set, delimiter='\t', fmt='%.9f')
+        # 計算実行
+        cmd0 = './userFunction/mazda_mop ./userFunction/'
+        subprocess.run(cmd0.split())
+
+        # 目的関数ファイルの1列目を抽出（3車種の合計重量）
+        data1 = np.loadtxt('./userFunction/pop_objs_eval.txt')
+        weight = data1[:, 0]
+
+        # 重量を記録
+        if len(weight) > 300:
+            pass
+        else:
+            df = pd.DataFrame(weight)
+            df.to_csv('weight.csv', mode='a', header=False)
+
+        # ペナルティを計算
+        P  = 0.0     # ペナルティ切片
+        Pc = 1000.0 # ペナルティ係数
+        Pe = 2    # ペナルティ指数
+
+        penalty = np.empty(size)
+        data2 = np.loadtxt('./userFunction/pop_cons_eval.txt')
+        for i in range(size):
+            sigma = 0
+            for j in range(54):
+                if data2[i, j] >= 0:
+                    data2[i, j] = 0
+                else:
+                    pass
+                sigma = sigma + (data2[i, j] ** Pe)
+            penalty[i] = P + Pc * sigma
+
+        evaluate_set = weight + penalty
+        return evaluate_set
 
 
 class Rosenbrock(Evaluator):
@@ -74,20 +122,14 @@ class CrossValidation(Evaluator):
         return evaluate_set
 
 if __name__ == "__main__":
-    generator = Generator(10, 0, 2, 100)
+
+    boundary = 'bound.csv'
+
+    test = Generator(boundary, 222, 300)
+
     # 個体集団の2次元配列の取得
-    individual_set = generator.generate()
+    individual_set = test.generate()
 
-    # テストデータを取得
-    data = StandardData(5, 2).standard("result.csv")
+    function = Benchmark()
 
-    design_variables = 5
-    design = np.array(data[0:, 0:design_variables])
-    object = np.array(data[0:, design_variables-1:-1])
-    evaluator = CrossValidation(data, 5, 2, 0)
-    # 個体集団の評価値配列（1次元）の取得
-    test = evaluator.evaluate(individual_set)
-
-    print(individual_set)
-    print(test)
-    print(object)
+    function.evaluate(individual_set)

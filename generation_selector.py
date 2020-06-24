@@ -24,7 +24,7 @@ class GenerationSelector(metaclass=ABCMeta):
         parents_set = np.array([individual_set[x] for x in parents_index])
 
 class JGG(GenerationSelector):
-    """Just Generation Gap による世代交代
+    """Just Generation Gap による世代交代(親子間での完全世代交代)
     """
 
     def select(self, individual_set, parents_index, children_set, children_value):

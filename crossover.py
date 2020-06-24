@@ -90,8 +90,12 @@ class BLXalpha(Crossover):
 
 
 class REX(Crossover):
+    def __init__(self, generate_size, k):
+        super(REX, self).__init__(generate_size)
+        self._k = k
+
     def crossover(self, individual_set, parents_index):
-        """次元数+1個体から子個体を生成する
+        """次元数+K個体から子個体を生成する
         """
         # 親個体の2次元配列化（親個体数×次元数）
         parents = np.array([individual_set[i] for i in parents_index])
@@ -106,7 +110,7 @@ class REX(Crossover):
         n = parents.shape[0]
 
         # 一様分布のときの区間[-a, a]を求める
-        a = np.sqrt(3/n)
+        a = np.sqrt(3/(n+self._k))
 
         # 空配列を用意
         children = np.zeros(dimension)
@@ -125,21 +129,23 @@ class REX(Crossover):
 
 if __name__ == "__main__":
     from generator import *
-    from userFunction.evaluator import *
+    from userFunction import evaluator
     from individual_selector import *
 
-    generator = Generator(10, 0, 2, 100)
+    bound = './userFunction/bound_test.csv'
+    dimension = 2
+    size = 5
+    generator = Generator(bound, dimension, size)
     individual_set = generator.generate()
-
-    evaluator = Rosenbrock()
-    evaluate_set = evaluator.evaluate(individual_set)
+    function = evaluator.Rosenbrock()
+    evaluate_set = function.evaluate(individual_set)
 
     random_index = RandomSelector(2+1).select(individual_set, evaluate_set)
     parents = np.array([individual_set[i] for i in random_index])
-    test = REX(1000).crossover(individual_set, random_index)
+    children_set = REX(1000, 1).crossover(individual_set, random_index)
     #print(individual_set)
     print(evaluate_set)
     print(random_index)
     np.savetxt('./individual_set.csv', individual_set, delimiter=',')
-    np.savetxt('./children_set.csv', test, delimiter=',')
+    np.savetxt('./children_set.csv', children_set, delimiter=',')
     np.savetxt('./parents.csv', parents, delimiter=',')

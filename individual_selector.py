@@ -71,17 +71,16 @@ if __name__ == "__main__":
     from generator import *
     from userFunction import evaluator
 
-    generator = Generator(10, 0, 3, 4)
+    bound = './userFunction/bound_test.csv'
+    dimension = 2
+    size = 5
+    generator = Generator(bound, dimension, size)
     individual_set = generator.generate()
     function = evaluator.Rosenbrock()
     evaluate_set = function.evaluate(individual_set)
 
-    elite_set = EliteSelector(2).select(individual_set, evaluate_set)
-    roulette_set = RouletteSelector(3).select(individual_set, evaluate_set)
-    random_set = RandomSelector(3).select(individual_set, evaluate_set)
+    elite_set = EliteSelector(3).select(individual_set, evaluate_set)
 
     print(individual_set)
     print(evaluate_set)
     print(elite_set)
-    print(roulette_set)
-    print(random_set)
