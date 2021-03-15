@@ -1,8 +1,11 @@
 # 評価関数による評価
+import sys, os
 import subprocess
 import numpy as np
 import pandas as pd
 from abc import ABCMeta, abstractmethod
+
+sys.path.append(os.pardir)
 
 from generator import Generator
 #from .standard_data import StandardData
@@ -76,11 +79,21 @@ class Rosenbrock(Evaluator):
 
         # individual_setの行数（個体数）を取得
         size = individual_set.shape[0]
+        dimension = individual_set.shape[1]
 
         evaluate_set = np.array([], dtype = np.float64)
-        for i in range(size):
-            result = 100.0 * (individual_set[i,1] - individual_set[i,0]**2) ** 2 + (individual_set[i,0] - 1)** 2
-            evaluate_set = np.append(evaluate_set, result)
+
+        if dimension==2:
+            for i in range(size):
+                result = 0
+                result = 100.0 * (individual_set[i,1] - individual_set[i,0]**2) ** 2 + (individual_set[i,0] - 1)** 2
+                evaluate_set = np.append(evaluate_set, result)
+        else:
+            for i in range(size):
+                result = 0
+                for j in range(dimension-1):
+                    result += 100.0 * (individual_set[i,j+1] - individual_set[i,j]**2) ** 2 + (individual_set[i,j] - 1)** 2
+                evaluate_set = np.append(evaluate_set, result)
         return evaluate_set
 
 
@@ -123,13 +136,13 @@ class CrossValidation(Evaluator):
 
 if __name__ == "__main__":
 
-    boundary = 'bound.csv'
+    boundary = 'bound_test.csv'
 
-    test = Generator(boundary, 222, 300)
+    test = Generator(boundary, 3, 10)
 
     # 個体集団の2次元配列の取得
     individual_set = test.generate()
 
-    function = Benchmark()
+    function = Rosenbrock()
 
-    function.evaluate(individual_set)
+    print(function.evaluate(individual_set))

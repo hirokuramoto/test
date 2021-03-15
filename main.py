@@ -17,10 +17,10 @@ def main():
     t1 = time.time()
 
     # GAパラメータ
-    boundary  = './userFunction/bound.csv'
-    DIMENSION = 222 # パラメータ数
-    SIZE      = 300 # 生成する個体数
-    LOOP      = 100 # 繰り返し数
+    boundary  = './userFunction/bound_test.csv'
+    DIMENSION = 99 # パラメータ数
+    SIZE      = 100 # 生成する個体数
+    LOOP      = 10000 # 繰り返し数
     K         = 1   # 親個体数の調整パラメータ（REXで使用） n+K (K=1～0.5n)
 
     # 記録用の配列
@@ -30,8 +30,8 @@ def main():
 
     # 評価関数の設定
     #function = evaluator.CrossValidation()
-    #function = evaluator.Rosenbrock()
-    function = evaluator.Benchmark()
+    function = evaluator.Rosenbrock()
+    #function = evaluator.Benchmark()
 
     # 初期個体の生成
     generator = Generator(boundary, DIMENSION, SIZE)
@@ -75,7 +75,7 @@ def main():
     print("elapsed_time=", elapsed_time)
     print("generation=", i, "best value=", best_value, "parameter=", best_individual)
 
-    np.savetxt('pop_vars_eval.txt', param2, delimiter='\t', fmt='%.9f')
+    #np.savetxt('pop_vars_eval.txt', param2, delimiter='\t', fmt='%.9f')
 
     # 評価値の履歴をグラフ化
     fig = plt.figure()
@@ -88,7 +88,7 @@ def main():
     ax.set_xlabel(r'count')
     ax.set_ylabel(r'value')
     ax.set_xlim(0.0, LOOP)
-    ax.scatter(count, value, s=10, c='blue', edgecolors='blue', linewidths='1', marker='o', alpha = '0.5')
+    ax.scatter(count, value, s=10, c='blue', edgecolors='blue', linewidths=1, marker='o', alpha=0.5)
     plt.show()
 
 if __name__ == "__main__":
