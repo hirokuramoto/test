@@ -18,10 +18,10 @@ def main():
 
     # GAパラメータ
     boundary  = './userFunction/bound_test.csv'
-    DIMENSION = 99 # パラメータ数
-    SIZE      = 100 # 生成する個体数
+    DIMENSION = 99    # パラメータ数
+    SIZE      = 100   # 生成する個体数
     LOOP      = 10000 # 繰り返し数
-    K         = 1   # 親個体数の調整パラメータ（REXで使用） n+K (K=1～0.5n)
+    K         = 1     # 親個体数の調整パラメータ（REXで使用） n+K (K=1～0.5n)
 
     # 記録用の配列
     count = np.array([], dtype = np.int)

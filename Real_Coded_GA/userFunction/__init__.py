@@ -1,1 +1,0 @@
-from userFunction.evaluator import *
